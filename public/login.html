@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Billing System - Login</title>
+  <link rel="stylesheet" href="login.css">
+</head>
+<body>
+  <div class="login-container">
+    <div class="login-box">
+      <div class="login-header">
+        <h1>Billing System</h1>
+        <p>Secure Access</p>
+      </div>
+
+      <!-- Login Form -->
+      <form id="loginForm" class="form">
+        <h2>Login</h2>
+        <div class="form-group">
+          <label for="loginEmail">Email</label>
+          <input type="email" id="loginEmail" placeholder="Enter your email" required>
+        </div>
+        <div class="form-group">
+          <label for="loginPassword">Password</label>
+          <input type="password" id="loginPassword" placeholder="Enter your password" required>
+        </div>
+        <button type="submit" class="btn btn-login">Login</button>
+        <p class="form-switch">
+          Don't have an account? <a href="#" onclick="toggleForm()">Register here</a>
+        </p>
+      </form>
+
+      <!-- Register Form -->
+      <form id="registerForm" class="form" style="display: none;">
+        <h2>Register</h2>
+        <div class="form-group">
+          <label for="registerName">Full Name</label>
+          <input type="text" id="registerName" placeholder="Enter your full name" required>
+        </div>
+        <div class="form-group">
+          <label for="registerEmail">Email</label>
+          <input type="email" id="registerEmail" placeholder="Enter your email" required>
+        </div>
+        <div class="form-group">
+          <label for="registerPassword">Password</label>
+          <input type="password" id="registerPassword" placeholder="Enter password (min 6 chars)" required>
+        </div>
+        <div class="form-group">
+          <label for="registerPasswordConfirm">Confirm Password</label>
+          <input type="password" id="registerPasswordConfirm" placeholder="Confirm password" required>
+        </div>
+        <button type="submit" class="btn btn-register">Register</button>
+        <p class="form-switch">
+          Already have an account? <a href="#" onclick="toggleForm()">Login here</a>
+        </p>
+      </form>
+    </div>
+
+    <div class="info-box">
+      <h3>Welcome to Billing System</h3>
+      <ul>
+        <li>✓ Manage Customers</li>
+        <li>✓ Create Invoices</li>
+        <li>✓ Track Payments</li>
+        <li>✓ Manage Items & Products</li>
+        <li>✓ Generate Reports</li>
+      </ul>
+    </div>
+  </div>
+
+  <script src="login.js"></script>
+</body>
+</html>

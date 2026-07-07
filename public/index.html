@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Automated Billing System</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <nav class="navbar">
+      <div class="nav-brand">Billing System</div>
+      <ul class="nav-menu">
+        <li><a href="#" onclick="showSection('dashboard')">Dashboard</a></li>
+        <li><a href="#" onclick="showSection('items')">Items</a></li>
+        <li><a href="#" onclick="showSection('customers')">Customers</a></li>
+        <li><a href="#" onclick="showSection('invoices')">Invoices</a></li>
+        <li><a href="#" onclick="showSection('payments')">Payments</a></li>
+      </ul>
+      <div class="nav-user">
+        <span id="userDisplay"></span>
+        <button class="btn btn-logout btn-sm" onclick="handleLogout()">Logout</button>
+      </div>
+    </nav>
+
+    <!-- Dashboard Section -->
+    <section id="dashboard" class="section active">
+      <h1>Dashboard</h1>
+      <div class="dashboard-grid">
+        <div class="card">
+          <h3>Total Customers</h3>
+          <p class="card-number" id="totalCustomers">0</p>
+        </div>
+        <div class="card">
+          <h3>Total Invoices</h3>
+          <p class="card-number" id="totalInvoices">0</p>
+        </div>
+        <div class="card">
+          <h3>Paid Invoices</h3>
+          <p class="card-number" id="paidInvoices">0</p>
+        </div>
+        <div class="card">
+          <h3>Pending Payments</h3>
+          <p class="card-number" id="pendingPayments">0</p>
+        </div>
+      </div>
+      <button class="btn btn-primary" onclick="refreshDashboard()">Refresh</button>
+    </section>
+
+    <!-- Customers Section -->
+    <section id="items" class="section">
+      <h1>Items/Products</h1>
+      <button class="btn btn-success" onclick="toggleItemForm()">Add New Item</button>
+
+      <form id="itemForm" class="form" style="display: none;">
+        <h2>Add Item</h2>
+        <input type="text" id="itemName" placeholder="Item Name" required>
+        <input type="text" id="itemDescription" placeholder="Description">
+        <input type="text" id="itemSKU" placeholder="SKU (optional)">
+        <input type="text" id="itemCategory" placeholder="Category">
+        <input type="number" id="itemPrice" placeholder="Price" required step="0.01" min="0">
+        <button type="submit" class="btn btn-primary">Save Item</button>
+        <button type="button" class="btn btn-secondary" onclick="toggleItemForm()">Cancel</button>
+      </form>
+
+      <table class="table" id="itemsTable">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>SKU</th>
+            <th>Category</th>
+            <th>Price</th>
+            <th>Description</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </section>
+
+    <!-- Customers Section -->
+    <section id="customers" class="section">
+      <h1>Customers</h1>
+      <button class="btn btn-success" onclick="toggleCustomerForm()">Add New Customer</button>
+
+      <form id="customerForm" class="form" style="display: none;">
+        <h2>Add Customer</h2>
+        <input type="text" id="customerName" placeholder="Customer Name" required>
+        <input type="email" id="customerEmail" placeholder="Email" required>
+        <input type="tel" id="customerPhone" placeholder="Phone" required>
+        <input type="text" id="customerCompany" placeholder="Company">
+        <input type="text" id="customerAddress" placeholder="Address">
+        <button type="submit" class="btn btn-primary">Save Customer</button>
+        <button type="button" class="btn btn-secondary" onclick="toggleCustomerForm()">Cancel</button>
+      </form>
+
+      <table class="table" id="customersTable">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Company</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </section>
+
+    <!-- Invoices Section -->
+    <section id="invoices" class="section">
+      <h1>Invoices</h1>
+      <button class="btn btn-success" onclick="toggleInvoiceForm()">Create Invoice</button>
+
+      <form id="invoiceForm" class="form" style="display: none;">
+        <h2>Create Invoice</h2>
+        <select id="invoiceCustomer" required>
+          <option value="">Select Customer</option>
+        </select>
+        <input type="date" id="invoiceDueDate" required>
+
+        <h3 style="margin-top: 1.5rem; margin-bottom: 0.5rem;">Invoice Items</h3>
+        
+        <div class="item-input-section">
+          <h4>Add Item from List</h4>
+          <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
+            <select id="itemDropdown" style="flex: 1;">
+              <option value="">Select an item to add</option>
+            </select>
+            <input type="number" id="itemQuantity" placeholder="Qty" value="1" min="1" style="width: 80px;">
+            <button type="button" class="btn btn-success btn-sm" onclick="addPredefinedItem()">Add</button>
+          </div>
+        </div>
+
+        <div class="item-input-section">
+          <h4>Or Add Custom Item</h4>
+          <div style="display: grid; grid-template-columns: 2fr 1fr 1fr auto; gap: 0.5rem; margin-bottom: 1rem; align-items: end;">
+            <input type="text" id="customItemDesc" placeholder="Description">
+            <input type="number" id="customItemQty" placeholder="Quantity" value="1" min="1">
+            <input type="number" id="customItemPrice" placeholder="Unit Price" step="0.01" min="0">
+            <button type="button" class="btn btn-info btn-sm" onclick="addCustomItem()">Add</button>
+          </div>
+        </div>
+
+        <div id="invoiceItems" style="margin-bottom: 1rem;">
+          <div class="invoice-item-display" style="display: none;">
+            <strong>No items added yet</strong>
+          </div>
+        </div>
+
+        <input type="number" id="invoiceTax" placeholder="Tax Amount" value="0" step="0.01" min="0">
+        <p style="font-size: 1.1rem; font-weight: bold; padding: 1rem; background-color: #f0f0f0; border-radius: 4px;">
+          Total: $<span id="invoiceTotal">0.00</span>
+        </p>
+        <button type="submit" class="btn btn-primary">Create Invoice</button>
+        <button type="button" class="btn btn-secondary" onclick="toggleInvoiceForm()">Cancel</button>
+      </form>
+
+      <table class="table" id="invoicesTable">
+        <thead>
+          <tr>
+            <th>Invoice #</th>
+            <th>Customer</th>
+            <th>Amount</th>
+            <th>Issue Date</th>
+            <th>Due Date</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </section>
+
+    <!-- Payments Section -->
+    <section id="payments" class="section">
+      <h1>Payments</h1>
+      <button class="btn btn-success" onclick="togglePaymentForm()">Record Payment</button>
+
+      <form id="paymentForm" class="form" style="display: none;">
+        <h2>Record Payment</h2>
+        <select id="paymentInvoice" required>
+          <option value="">Select Invoice</option>
+        </select>
+        <input type="number" id="paymentAmount" placeholder="Amount" required>
+        <select id="paymentMethod" required>
+          <option value="">Select Payment Method</option>
+          <option value="credit_card">Credit Card</option>
+          <option value="debit_card">Debit Card</option>
+          <option value="bank_transfer">Bank Transfer</option>
+          <option value="check">Check</option>
+          <option value="cash">Cash</option>
+        </select>
+        <input type="text" id="paymentNotes" placeholder="Notes">
+        <button type="submit" class="btn btn-primary">Record Payment</button>
+        <button type="button" class="btn btn-secondary" onclick="togglePaymentForm()">Cancel</button>
+      </form>
+
+      <table class="table" id="paymentsTable">
+        <thead>
+          <tr>
+            <th>Transaction ID</th>
+            <th>Invoice</th>
+            <th>Amount</th>
+            <th>Method</th>
+            <th>Status</th>
+            <th>Date</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </section>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
